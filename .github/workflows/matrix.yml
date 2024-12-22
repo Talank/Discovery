@@ -1,0 +1,24 @@
+name: Maven test
+
+on:
+  pull_request:
+    types: [ opened, reopened, edited ]
+  push:
+    # branches: [ develop, master ]
+
+jobs:
+  mvn_verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+      - name: Run the Maven verify phase
+        run: mvn clean test
+        continue-on-error: true
